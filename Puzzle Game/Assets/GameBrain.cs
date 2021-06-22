@@ -32,12 +32,6 @@ public class GameBrain : MonoBehaviour
         firstCorrect=-1;
         secodCorrect=-1;
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
     public void Restart()
     {
         StartCoroutine(RestartEnum());
