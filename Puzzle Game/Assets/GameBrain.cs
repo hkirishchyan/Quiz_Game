@@ -5,23 +5,31 @@ using UnityEngine.UI;
 using DG.Tweening;
 public class GameBrain : MonoBehaviour
 {
-    public GameObject numberFrame;
-    public GameObject mainCanvas;
+    [Header("Frame Settings")]
+    public GameObject prefabFrame;
+    public int frameNum;
+    public float bounceTime = 0.25f;
+    public float bounceHeight = 10;
+    [SerializeField]
+    public string correctTile;
+    [SerializeField]
+    int correctTileNum;
+    [Space(2)]
+    [Header("Frame Items")]
     public List<Sprite> frameIter = new List<Sprite>();
     HashSet<int> randomSet= new HashSet<int>();
     List<int> randomValues = new List<int>();
-    public float bounceTime = 0.25f;
-    public float bounceHeight = 10;
+    [Header("Canvas Misc")]
     public Text findText;
-    public string correctTile;
-    int correctTileNum;
-    GameObject[] gb;
-    public int frameNum;
-    bool winGame;
     public GameObject winScreen;
     public Image loadScreen;
+    public GameObject mainCanvas;
+    [SerializeField]
     int firstCorrect;
+    [SerializeField]
     int secodCorrect;
+    GameObject[] gb;
+    bool winGame;
     // Start is called before the first frame update
     void Start()
     {
@@ -92,7 +100,6 @@ public class GameBrain : MonoBehaviour
         else if(setTile == correctTileNum && winGame)
         {
             StartCoroutine(GameWin());
-            DestroyObject();
             findText.gameObject.SetActive(false);
         }
         else
@@ -103,7 +110,8 @@ public class GameBrain : MonoBehaviour
     }
     IEnumerator GameWin()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1.5f);
+        DestroyObject();
         winScreen.SetActive(true);
         Color winAlpha=winScreen.transform.Find("Background").GetComponent<Image>().color;
         while (winAlpha.a < 0.7)
@@ -144,6 +152,7 @@ public class GameBrain : MonoBehaviour
         float xPos = posHolder.x;
 
         correctTileNum = Random.Range(0, frameNum);
+        //Checks if the value is unique, should have done with a list find and remove. 
         //while (firstCorrect == correctTileNum||secodCorrect==correctTileNum)
         //{
         //    if (correctTileNum <= frameNum && correctTileNum>=0)
@@ -165,7 +174,7 @@ public class GameBrain : MonoBehaviour
         }
         for (int i = 0; i < frameNum; i++)
         {
-            gb[i] = Instantiate(numberFrame, posHolder, numberFrame.transform.rotation, mainCanvas.transform);
+            gb[i] = Instantiate(prefabFrame, posHolder, prefabFrame.transform.rotation, mainCanvas.transform);
             Transform backColor = gb[i].transform.Find("Background");
             Transform symbolHolder = gb[i].transform.Find("Background/Symbol");
             symbolHolder.GetComponent<Image>().sprite = frameIter[randomValues[i]];
